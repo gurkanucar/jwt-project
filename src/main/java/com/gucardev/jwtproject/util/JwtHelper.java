@@ -29,12 +29,9 @@ public class JwtHelper {
     private String EXPIRES_ACCESS_TOKEN;
 
 
-
-    private final Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
-
-    private final JWTVerifier verifier = JWT.require(algorithm).build();
-
     public String createJwtToken(User user) {
+
+        Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
 
         List<String> roles = user.getRoles().stream()
                 .map(Role::getName)
@@ -50,6 +47,9 @@ public class JwtHelper {
 
 
     public UsernamePasswordAuthenticationToken getAuthToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
         String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
