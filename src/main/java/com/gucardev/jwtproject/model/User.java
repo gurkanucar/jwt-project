@@ -3,6 +3,7 @@ package com.gucardev.jwtproject.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,6 +22,7 @@ import static javax.persistence.CascadeType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 @Entity
 public class User implements Serializable {
 

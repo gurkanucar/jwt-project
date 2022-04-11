@@ -1,0 +1,4 @@
+jwt-variables:
+  KEY: jwtProject
+  ISSUER: 90000
+  EXPIRES_ACCESS_TOKEN: 150000
