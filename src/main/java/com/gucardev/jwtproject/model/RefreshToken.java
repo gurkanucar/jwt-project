@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -36,7 +37,7 @@ public class RefreshToken {
 
 
     @Column(name = "expiry_date", nullable = false)
-    private LocalDate expiryDate;
+    private LocalDateTime expiryDate;
 
 
 }
