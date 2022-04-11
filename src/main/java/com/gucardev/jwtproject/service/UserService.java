@@ -1,8 +1,11 @@
 package com.gucardev.jwtproject.service;
 
+import com.gucardev.jwtproject.model.Role;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,15 +21,14 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final AuthService authService;
+
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       RoleService roleService, AuthService authService) {
+                       RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        this.authService = authService;
     }
 
     @Override
@@ -69,6 +71,7 @@ public class UserService implements UserDetailsService {
         existing.setPassword(passwordEncoder.encode(user.getPassword()));
         existing.setName(user.getName());
         existing.setSurname(user.getSurname());
+        existing.setRoles(user.getRoles());
         userRepository.save(existing);
     }
 
@@ -87,12 +90,27 @@ public class UserService implements UserDetailsService {
 
 
     private boolean isAuthorized(User unknownUser) {
-        User user = authService.getAuthenticatedUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = getUser(auth.getName());
         var isAdmin = user.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
         var isOwner = unknownUser.getId().equals(user.getId());
         return isAdmin || isOwner;
     }
 
+
+    public void grantRole(String username, String roleName) {
+        User user = getUserByUsername(username);
+        Role role = roleService.getRoleByName(roleName);
+        user.getRoles().add(role);
+        updateUser(user);
+    }
+
+    public void revokeRole(String username, String roleName) {
+        User user = getUserByUsername(username);
+        Role role = roleService.getRoleByName(roleName);
+        user.getRoles().remove(role);
+        updateUser(user);
+    }
 
 }
