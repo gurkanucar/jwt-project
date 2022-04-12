@@ -5,6 +5,7 @@ import com.gucardev.jwtproject.model.ROLES;
 import com.gucardev.jwtproject.model.Role;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.UserRepository;
+import com.gucardev.jwtproject.request.UpdateUserRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -80,13 +81,17 @@ public class UserService implements UserDetailsService {
         return newUser;
     }
 
+    public void updateUser(UpdateUserRequest userRequest) {
+        // get the user if it is admin or himself
+        User existing = getUserByPermit(userRequest.getUsername());
+        updateUser(existing);
+    }
 
     public void updateUser(User user) {
-        // get the user if it is admin or himself
-        //  User existing = getUserByPermit(user.getUsername());
         User existing = getUserByUsername(user.getUsername());
 
-        existing.setPassword(user.getPassword());
+        existing.setPassword(passwordEncoder.encode(user.getPassword()));
+        existing.setEmail(user.getEmail());
         existing.setName(user.getName());
         existing.setSurname(user.getSurname());
         if (doesIncludesRoles(List.of(ROLES.ADMIN, ROLES.SUPERADMIN), user.getRoles())) {

@@ -4,6 +4,7 @@ package com.gucardev.jwtproject.controller;
 import com.gucardev.jwtproject.dto.UserDto;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.request.RoleGrantRevokeRequest;
+import com.gucardev.jwtproject.request.UpdateUserRequest;
 import com.gucardev.jwtproject.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequest user) {
         userService.updateUser(user);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
