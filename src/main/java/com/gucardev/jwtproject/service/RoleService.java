@@ -1,8 +1,10 @@
 package com.gucardev.jwtproject.service;
 
+import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.model.Role;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.RoleRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class RoleService {
 
     public Role getRoleByName(String name) {
         return roleRepository.findRoleByName(name)
-                .orElseThrow(() -> new RuntimeException("Role not found!"));
+                .orElseThrow(() -> new GeneralException("Role not found!", HttpStatus.NOT_FOUND));
     }
 
 

@@ -5,8 +5,9 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 
+
 @Data
-public class GeneralException extends Throwable{
+public class GeneralException extends RuntimeException {
 
     private final String message;
     private final HttpStatus status;

@@ -1,6 +1,7 @@
 package com.gucardev.jwtproject.service;
 
 
+import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.model.RefreshToken;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.RefreshTokenRepository;
@@ -9,6 +10,7 @@ import com.gucardev.jwtproject.request.LoginRequest;
 import com.gucardev.jwtproject.util.JwtHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,23 +30,14 @@ public class AuthService {
     private final UserService userService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtHelper jwtHelper;
-    private final ModelMapper mapper;
 
     public AuthService(UserService userService,
                        RefreshTokenRepository refreshTokenRepository,
-                       JwtHelper jwtHelper,
-                       ModelMapper mapper) {
+                       JwtHelper jwtHelper) {
         this.userService = userService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.jwtHelper = jwtHelper;
-        this.mapper = mapper;
     }
-
-    /*
-    public void createRefreshToken(RefreshTokenRequest refreshTokenRequest) {
-
-    }
-     */
 
     private RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = new RefreshToken();
@@ -124,7 +117,7 @@ public class AuthService {
 
             return createTokens(token.getUser());
         } else
-            throw new RuntimeException("Invalid refresh token!");
+            throw new GeneralException("Invalid refresh token!", HttpStatus.BAD_REQUEST);
 
     }
 
@@ -136,7 +129,7 @@ public class AuthService {
 
     protected RefreshToken getRefreshToken(String token) {
         return refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("token not found"));
+                .orElseThrow(() -> new GeneralException("token not found", HttpStatus.NOT_FOUND));
     }
 
 

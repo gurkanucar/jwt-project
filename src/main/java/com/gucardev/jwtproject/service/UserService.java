@@ -1,8 +1,10 @@
 package com.gucardev.jwtproject.service;
 
+import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.model.Role;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,7 +54,7 @@ public class UserService implements UserDetailsService {
     public User getUser(String username) {
         User user = getUserByUsername(username);
         if (!isAuthorized(user)) {
-            throw new RuntimeException("you can not make this operation!");
+            throw new GeneralException("you can not make this operation!",HttpStatus.UNAUTHORIZED);
         }
         return user;
     }
@@ -87,13 +89,13 @@ public class UserService implements UserDetailsService {
 
     protected User getUserByUsername(String username) {
         return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found!"));
+                .orElseThrow(() -> new GeneralException("User not found!", HttpStatus.NOT_FOUND));
     }
 
     protected User checkLoginUser(String username, String password) {
         var user = getUserByUsername(username);
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("wrong password!");
+            throw new GeneralException("wrong password!", HttpStatus.NOT_FOUND);
         }
         return user;
     }
