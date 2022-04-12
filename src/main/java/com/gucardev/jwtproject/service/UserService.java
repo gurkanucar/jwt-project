@@ -1,6 +1,7 @@
 package com.gucardev.jwtproject.service;
 
 import com.gucardev.jwtproject.exception.GeneralException;
+import com.gucardev.jwtproject.model.ROLES;
 import com.gucardev.jwtproject.model.Role;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.UserRepository;
@@ -66,7 +67,7 @@ public class UserService implements UserDetailsService {
             throw new GeneralException("User already exists!", HttpStatus.CONFLICT);
         }
 
-        var userRole = roleService.getRoleByName("USER");
+        var userRole = roleService.getRoleByName(ROLES.USER.toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(userRole));
         User newUser;
@@ -117,9 +118,13 @@ public class UserService implements UserDetailsService {
     private boolean isAuthorized(User unknownUser) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = getUserByUsername(auth.getName());
-        var isAdmin = user.getRoles().stream()
-                .anyMatch(role -> role.getName().equals("ADMIN"));
+
+        var isAdmin = doesIncludesRoles(
+                List.of(ROLES.SUPERADMIN, ROLES.ADMIN),
+                user.getRoles());
+
         var isOwner = unknownUser.getId().equals(user.getId());
+
         return isAdmin || isOwner;
     }
 
@@ -141,14 +146,22 @@ public class UserService implements UserDetailsService {
         User user = getUserByUsername(username);
         Role role = roleService.getRoleByName(roleName);
         var roles = user.getRoles();
-        if (roles.size() == 1 && roles.contains(roleService.getRoleByName("USER"))) {
-            throw new GeneralException("Every user must have USER role at least!", HttpStatus.NOT_ACCEPTABLE);
-        } else {
+        if (roles.size() > 1 && !role.getName().equals(ROLES.SUPERADMIN.toString())) {
             user.getRoles().remove(role);
             updateUser(user);
+        } else if (role.getName().equals(ROLES.SUPERADMIN.toString())) {
+            throw new GeneralException("Are you kidding :D", HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            throw new GeneralException("Every user must have a role at least!", HttpStatus.NOT_ACCEPTABLE);
         }
-
         return user;
+    }
+
+
+    protected boolean doesIncludesRoles(List<ROLES> checkRoles, List<Role> roles) {
+        return roles.stream()
+                .anyMatch(role -> checkRoles.stream()
+                        .anyMatch(x -> x.toString().equals(role.getName())));
     }
 
 }
