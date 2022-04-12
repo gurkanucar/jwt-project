@@ -1,6 +1,8 @@
 package com.gucardev.jwtproject.config.filter;
 
+import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,7 +31,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
 
-
         if (request.getServletPath().equals("/login"))
             filterChain.doFilter(request, response);
 
@@ -39,8 +40,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
                 String token = authHeader.substring(7);
+                UsernamePasswordAuthenticationToken authToken;
+                try {
+                    authToken = authService.getAuthToken(token);
+                } catch (Exception e) {
+                    throw new GeneralException("Try to login again!", HttpStatus.UNAUTHORIZED);
+                }
 
-                UsernamePasswordAuthenticationToken authToken = authService.getAuthToken(token);
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
@@ -52,7 +58,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             }
 
         }
-
 
 
     }

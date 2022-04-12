@@ -23,7 +23,7 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
     private final AuthService authService;
 
     public CustomAuthenticationFilter(AuthService authService) {
-        super(new AntPathRequestMatcher("/auth/signin", "POST"));
+        super(new AntPathRequestMatcher("/auth/login", "POST"));
         this.authService = authService;
     }
 
