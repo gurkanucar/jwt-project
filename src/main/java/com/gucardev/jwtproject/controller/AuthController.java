@@ -31,7 +31,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        //  var userDto = mapper.map(authService.registerUser(createUserRequest), UserDto.class);
         return ResponseEntity.ok().body(authService.registerUser(createUserRequest));
     }
 
@@ -42,6 +41,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
+        authService.logout();
         return ResponseEntity.ok().build();
     }
 

@@ -5,9 +5,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.model.Role;
 import com.gucardev.jwtproject.model.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -40,7 +42,7 @@ public class JwtHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(convertToDateViaSqlDate(LocalDate.now().plusDays(Long.parseLong(EXPIRES_ACCESS_TOKEN))))
+                //.withExpiresAt(convertToDateViaSqlDate(LocalDate.now().plusDays(Long.parseLong(EXPIRES_ACCESS_TOKEN))))
                 .withIssuer(ISSUER)
                 .withClaim("roles", roles)
                 .sign(algorithm);
@@ -49,9 +51,16 @@ public class JwtHelper {
 
     public UsernamePasswordAuthenticationToken getAuthToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
-        JWTVerifier verifier = JWT.require(algorithm).build();
+        JWTVerifier verifier = JWT.require(algorithm)
+                .acceptExpiresAt(1)
+                .build();
+        DecodedJWT decodedJWT;
+        try {
+            decodedJWT = verifier.verify(token);
+        } catch (Exception e) {
+            throw new GeneralException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
         String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

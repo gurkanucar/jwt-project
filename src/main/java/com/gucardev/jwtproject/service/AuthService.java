@@ -56,7 +56,6 @@ public class AuthService {
 
 
     public Map<String, String> createTokens(User user) {
-        deleteOldTokensByUsername(user.getUsername());
         return createTokens(user.getUsername());
     }
 
@@ -87,10 +86,14 @@ public class AuthService {
 
 
     public Map<String, String> login(LoginRequest loginRequest) {
+        deleteOldTokensByLogin(loginRequest.getUsername());
         var user = userService.checkLoginUser(loginRequest.getUsername(), loginRequest.getPassword());
         return createTokens(user);
     }
 
+    public void logout() {
+        deleteOldTokensByUsername(getAuthenticatedUser().getUsername());
+    }
 
     public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -120,8 +123,19 @@ public class AuthService {
         refreshTokenRepository.delete(refreshToken);
     }
 
-    public void deleteOldTokensByUsername(String username) {
+    public void deleteOldTokensByLogin(String username) {
         refreshTokenRepository.deleteRefreshTokenByUser(userService.getUserByUsername(username));
+    }
+
+    public void deleteOldTokensByUsername(String username) {
+        User user = userService.getUserByUsername(username);
+
+        if (refreshTokenRepository.findByUser(user).isPresent()) {
+            refreshTokenRepository.deleteRefreshTokenByUser(user);
+        } else {
+            throw new GeneralException("you already have been logouted!", HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 

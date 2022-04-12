@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public SecurityConfig(UserDetailsService userDetailsService,
                           PasswordEncoder passwordEncoder,
-                                  AuthService authService) {
+                          AuthService authService) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.authService = authService;
@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin().disable();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers(POST, "/auth/**").permitAll();
+        http.authorizeRequests().antMatchers(POST, "/auth/login", "/auth/register").permitAll();
         http.authorizeRequests().antMatchers(POST, "/user").permitAll();
         http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
         http.authorizeRequests().antMatchers("/role/**").hasAuthority("ROLE_ADMIN");
@@ -82,8 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CustomAuthenticationExceptionHandler authenticationExceptionHandler() {
         return new CustomAuthenticationExceptionHandler();
     }
-
-
 
 
 }
