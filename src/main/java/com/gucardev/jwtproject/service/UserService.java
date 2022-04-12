@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
 
     public void updateUser(User user) {
         // get the user if it is admin or himself
-      //  User existing = getUserByPermit(user.getUsername());
+        //  User existing = getUserByPermit(user.getUsername());
         User existing = getUserByUsername(user.getUsername());
 
         existing.setPassword(user.getPassword());
@@ -116,26 +116,39 @@ public class UserService implements UserDetailsService {
 
     private boolean isAuthorized(User unknownUser) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = getUserByPermit(auth.getName());
+        User user = getUserByUsername(auth.getName());
         var isAdmin = user.getRoles().stream()
-                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+                .anyMatch(role -> role.getName().equals("ADMIN"));
         var isOwner = unknownUser.getId().equals(user.getId());
         return isAdmin || isOwner;
     }
 
 
-    public void grantRole(String username, String roleName) {
+    public User grantRole(String username, String roleName) {
         User user = getUserByUsername(username);
         Role role = roleService.getRoleByName(roleName);
-        user.getRoles().add(role);
-        updateUser(user);
+        if (!user.getRoles().contains(role)) {
+            user.getRoles().add(role);
+            updateUser(user);
+        } else {
+            throw new GeneralException("Role already exists!", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return user;
     }
 
-    public void revokeRole(String username, String roleName) {
+    public User revokeRole(String username, String roleName) {
         User user = getUserByUsername(username);
         Role role = roleService.getRoleByName(roleName);
-        user.getRoles().remove(role);
-        updateUser(user);
+        var roles = user.getRoles();
+        if (roles.size() == 1 && roles.contains(roleService.getRoleByName("USER"))) {
+            throw new GeneralException("Every user must have USER role at least!", HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            user.getRoles().remove(role);
+            updateUser(user);
+        }
+
+        return user;
     }
 
 }

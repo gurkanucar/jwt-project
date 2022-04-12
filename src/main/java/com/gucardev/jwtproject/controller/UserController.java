@@ -29,7 +29,7 @@ public class UserController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
         //convert to dto
@@ -61,18 +61,14 @@ public class UserController {
 
     @PutMapping("/role")
     public ResponseEntity<?> grantRole(@Valid @RequestBody RoleGrantRevokeRequest request) {
-
-        userService.grantRole(request.getUsername(), request.getRole());
-
-        return ResponseEntity.ok().build();
+        var dto = mapper.map(userService.grantRole(request.getUsername(), request.getRole()), UserDto.class);
+        return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/role")
     public ResponseEntity<?> revokeRole(@Valid @RequestBody RoleGrantRevokeRequest request) {
-
-        userService.revokeRole(request.getUsername(), request.getRole());
-
-        return ResponseEntity.ok().build();
+        var dto = mapper.map(userService.revokeRole(request.getUsername(), request.getRole()), UserDto.class);
+        return ResponseEntity.ok().body(dto);
     }
 
 }
