@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RoleRequest {
 
-
-    private Long id;
     private String name;
     private String detail;
 
