@@ -54,25 +54,38 @@ public class UserService implements UserDetailsService {
     public User getUserByPermit(String username) {
         User user = getUserByUsername(username);
         if (!isAuthorized(user)) {
-            throw new GeneralException("you can not make this operation!",HttpStatus.UNAUTHORIZED);
+            throw new GeneralException("you can not make this operation!", HttpStatus.UNAUTHORIZED);
         }
         return user;
     }
 
 
     public User saveUser(User user) {
+
+        if (userRepository.findUserByUsername(user.getUsername()).isPresent()) {
+            throw new GeneralException("User already exists!", HttpStatus.CONFLICT);
+        }
+
         var userRole = roleService.getRoleByName("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(userRole));
-        return userRepository.save(user);
+        User newUser;
+        try {
+            newUser = userRepository.save(user);
+        } catch (Exception e) {
+            throw new GeneralException("An error occurred while saving user!",
+                    HttpStatus.BAD_REQUEST);
+        }
+        return newUser;
     }
 
 
     public void updateUser(User user) {
         // get the user if it is admin or himself
-        User existing = getUserByPermit(user.getUsername());
+      //  User existing = getUserByPermit(user.getUsername());
+        User existing = getUserByUsername(user.getUsername());
 
-        existing.setPassword(passwordEncoder.encode(user.getPassword()));
+        existing.setPassword(user.getPassword());
         existing.setName(user.getName());
         existing.setSurname(user.getSurname());
         existing.setRoles(user.getRoles());

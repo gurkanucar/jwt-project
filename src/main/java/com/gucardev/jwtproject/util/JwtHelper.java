@@ -37,47 +37,43 @@ public class JwtHelper {
 
         Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
 
-        List<String> roles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
+        List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
-        return JWT.create()
-                .withSubject(user.getUsername())
+        return JWT.create().withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (EXPIRES_ACCESS_TOKEN_MINUTE * 60 * 1000)))
                 .withIssuedAt(convertToDateViaSqlDate(LocalDate.now()))
                 .withIssuer(ISSUER)
-                .withClaim("roles", roles)
-                .sign(algorithm);
-    }
-
-
-    public UsernamePasswordAuthenticationToken getAuthToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
-        JWTVerifier verifier = JWT.require(algorithm)
-                .acceptExpiresAt(EXPIRES_ACCESS_TOKEN_MINUTE * 60)
-                .build();
-        DecodedJWT decodedJWT;
-        try {
-            decodedJWT = verifier.verify(token);
-        } catch (Exception e) {
-            throw new GeneralException(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-        String username = decodedJWT.getSubject();
-        String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-        return new UsernamePasswordAuthenticationToken(username,
-                null, authorities);
-
+                .withClaim("roles", roles).sign(algorithm);
     }
 
 
     public String generateRefreshToken() {
-        return UUID.randomUUID()
-                .toString()
-                .replace("-", "");
+        return UUID.randomUUID().toString().replace("-", "");
     }
+
+
+    public UsernamePasswordAuthenticationToken getAuthToken(String token) {
+
+        DecodedJWT decodedJWT = verifyJWT(token);
+        String username = decodedJWT.getSubject();
+        String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+        return new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+    }
+
+    public DecodedJWT verifyJWT(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).acceptExpiresAt(EXPIRES_ACCESS_TOKEN_MINUTE * 60).build();
+
+        try {
+            return verifier.verify(token);
+        } catch (Exception e) {
+            throw new GeneralException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     public Date convertToDateViaSqlDate(LocalDate dateToConvert) {
         return java.sql.Date.valueOf(dateToConvert);
