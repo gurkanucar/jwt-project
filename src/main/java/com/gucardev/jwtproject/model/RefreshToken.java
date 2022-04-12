@@ -22,11 +22,11 @@ public class RefreshToken {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne//(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private User user;
 
 

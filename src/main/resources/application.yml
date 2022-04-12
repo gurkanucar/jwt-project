@@ -1,7 +1,7 @@
 jwt-variables:
   KEY: jwtProject
   ISSUER: gucardev
-  EXPIRES_ACCESS_TOKEN_MINUTE: 1
+  EXPIRES_ACCESS_TOKEN_MINUTE: 15
   EXPIRES_REFRESH_TOKEN_MINUTE: 150000
 
 
@@ -9,7 +9,11 @@ spring:
   datasource:
     url: jdbc:h2:mem:database
     driver-class-name: org.h2.Driver
+
   h2:
     console:
       enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
 

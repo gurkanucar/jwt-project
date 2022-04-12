@@ -56,7 +56,7 @@ public class User implements Serializable {
     @CreationTimestamp
     private LocalDate createdDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {MERGE, PERSIST, REFRESH, DETACH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = MERGE)
     private Collection<Role> roles = new ArrayList<>();
 
 
