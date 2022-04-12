@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
             throw new GeneralException("User already exists!", HttpStatus.CONFLICT);
         }
 
-        var userRole = roleService.getRoleByName("ROLE_USER");
+        var userRole = roleService.getRoleByName("USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(userRole));
         User newUser;
