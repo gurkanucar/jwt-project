@@ -8,7 +8,6 @@ import com.gucardev.jwtproject.repository.RefreshTokenRepository;
 import com.gucardev.jwtproject.request.CreateUserRequest;
 import com.gucardev.jwtproject.request.LoginRequest;
 import com.gucardev.jwtproject.util.JwtHelper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,13 +56,8 @@ public class AuthService {
 
 
     public Map<String, String> createTokens(User user) {
-
-        String access_token = jwtHelper.createJwtToken(user);
-        RefreshToken refreshToken = createRefreshToken(user);
-
-        return Map.of("access_token", access_token,
-                "refresh_token", refreshToken.getToken());
-
+        deleteOldTokensByUsername(user.getUsername());
+        return createTokens(user.getUsername());
     }
 
     public Map<String, String> createTokens(String username) {
@@ -124,6 +118,10 @@ public class AuthService {
     public void deleteRefreshToken(String token) {
         RefreshToken refreshToken = getRefreshToken(token);
         refreshTokenRepository.delete(refreshToken);
+    }
+
+    public void deleteOldTokensByUsername(String username) {
+        refreshTokenRepository.deleteRefreshTokenByUser(userService.getUserByUsername(username));
     }
 
 

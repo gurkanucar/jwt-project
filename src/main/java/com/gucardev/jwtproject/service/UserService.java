@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public User getUser(String username) {
+    public User getUserByPermit(String username) {
         User user = getUserByUsername(username);
         if (!isAuthorized(user)) {
             throw new GeneralException("you can not make this operation!",HttpStatus.UNAUTHORIZED);
@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
 
     public void updateUser(User user) {
         // get the user if it is admin or himself
-        User existing = getUser(user.getUsername());
+        User existing = getUserByPermit(user.getUsername());
 
         existing.setPassword(passwordEncoder.encode(user.getPassword()));
         existing.setName(user.getName());
@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(String username) {
         // get the user if it is admin or himself
-        User existing = getUser(username);
+        User existing = getUserByPermit(username);
         userRepository.delete(existing);
     }
 
@@ -103,7 +103,7 @@ public class UserService implements UserDetailsService {
 
     private boolean isAuthorized(User unknownUser) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = getUser(auth.getName());
+        User user = getUserByPermit(auth.getName());
         var isAdmin = user.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
         var isOwner = unknownUser.getId().equals(user.getId());

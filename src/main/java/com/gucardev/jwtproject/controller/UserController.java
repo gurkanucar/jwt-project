@@ -40,7 +40,7 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable String username) {
-        var dto = mapper.map(userService.getUser(username), UserDto.class);
+        var dto = mapper.map(userService.getUserByPermit(username), UserDto.class);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
