@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ec38d688-e205-4216-9b5e-60c144299ef8",
+		"_postman_id": "4245c609-8458-496a-a0ec-be40112cfd20",
 		"name": "jwt-auth-project",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -38,7 +38,7 @@
 					"response": []
 				},
 				{
-					"name": "login as admin",
+					"name": "login [SUPERADMIN]",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -67,7 +67,36 @@
 					"response": []
 				},
 				{
-					"name": "login as user",
+					"name": "login [ADMIN]",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"sezai\",\r\n    \"email\":\"s@mail.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login [USER]",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -96,7 +125,7 @@
 					"response": []
 				},
 				{
-					"name": "login as user 2",
+					"name": "login [USER] 2",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -190,6 +219,260 @@
 							"path": [
 								"auth",
 								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user controller",
+			"item": [
+				{
+					"name": "get all users [ADMIN]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZXphaSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6Imd1Y2FyZGV2IiwiZXhwIjoxNjQ5NzY5MzI1LCJpYXQiOjE2NDk3MTA4MDB9.4Eo-GbXEvj45gpMiRg7dm2H-pERBxPYsYRIO1AbeWT4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndXJrYW4iLCJyb2xlcyI6WyJTVVBFUkFETUlOIl0sImlzcyI6Imd1Y2FyZGV2IiwiZXhwIjoxNjQ5NzcxMDU0LCJpYXQiOjE2NDk3MTA4MDB9.WpwNmeR2SjXR-QHL6fJxr4b47UWZ04PxNe1UOCibsFc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/gurkan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"gurkan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "grantRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndXJrYW4iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJndWNhcmRldiIsImV4cCI6MTY0OTc2NzgxNCwiaWF0IjoxNjQ5NzEwODAwfQ.nCAOMI0INcLKC1A0KREbKfXFEaW5-IRlAz-mfnA6pnc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"gurkan\",\r\n    \"role\":\"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revokeRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndXJrYW4iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJndWNhcmRldiIsImV4cCI6MTY0OTc2NzgxNCwiaWF0IjoxNjQ5NzEwODAwfQ.nCAOMI0INcLKC1A0KREbKfXFEaW5-IRlAz-mfnA6pnc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"gurkan\",\r\n    \"role\":\"SUPERADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZXRpbiIsInJvbGVzIjpbIlVTRVIiXSwiaXNzIjoiZ3VjYXJkZXYiLCJleHAiOjE2NDk3NzE3NjgsImlhdCI6MTY0OTcxMDgwMH0.sZjsEbj0mpTDX7fcllVEcWIEH1u_1bSMRq1V3KDWqGM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"metin\",\r\n    \"email\": \"mm@mail.com\",\r\n    \"password\":\"passwordddd123\",\r\n    \"name\":\"metin\",\r\n    \"surname\":\"sezai\"\r\n   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "role controller",
+			"item": [
+				{
+					"name": "get all roles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndXJrYW4iLCJyb2xlcyI6WyJTVVBFUkFETUlOIl0sImlzcyI6Imd1Y2FyZGV2IiwiZXhwIjoxNjQ5NzcwNTQyLCJpYXQiOjE2NDk3MTA4MDB9.D_Rw-m-zxzzF6qIly-Heqw8Ua5j4kMhtr3nMY-OrUnI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/role/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"role",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndXJrYW4iLCJyb2xlcyI6WyJTVVBFUkFETUlOIl0sImlzcyI6Imd1Y2FyZGV2IiwiZXhwIjoxNjQ5NzcwNTQyLCJpYXQiOjE2NDk3MTA4MDB9.D_Rw-m-zxzzF6qIly-Heqw8Ua5j4kMhtr3nMY-OrUnI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"TEST\",\r\n    \"detail\":\"test role\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"role"
 							]
 						}
 					},
