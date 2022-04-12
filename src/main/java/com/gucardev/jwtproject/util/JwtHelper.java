@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,8 @@ public class JwtHelper {
     @Value("${jwt-variables.ISSUER}")
     private String ISSUER;
 
-    @Value("${jwt-variables.EXPIRES_ACCESS_TOKEN}")
-    private String EXPIRES_ACCESS_TOKEN;
+    @Value("${jwt-variables.EXPIRES_ACCESS_TOKEN_MINUTE}")
+    private Integer EXPIRES_ACCESS_TOKEN_MINUTE;
 
 
     public String createJwtToken(User user) {
@@ -42,7 +43,8 @@ public class JwtHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                //.withExpiresAt(convertToDateViaSqlDate(LocalDate.now().plusDays(Long.parseLong(EXPIRES_ACCESS_TOKEN))))
+                .withExpiresAt(new Date(System.currentTimeMillis() + (EXPIRES_ACCESS_TOKEN_MINUTE * 60 * 1000)))
+                .withIssuedAt(convertToDateViaSqlDate(LocalDate.now()))
                 .withIssuer(ISSUER)
                 .withClaim("roles", roles)
                 .sign(algorithm);
@@ -52,7 +54,7 @@ public class JwtHelper {
     public UsernamePasswordAuthenticationToken getAuthToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(KEY.getBytes());
         JWTVerifier verifier = JWT.require(algorithm)
-                .acceptExpiresAt(1)
+                .acceptExpiresAt(EXPIRES_ACCESS_TOKEN_MINUTE * 60)
                 .build();
         DecodedJWT decodedJWT;
         try {

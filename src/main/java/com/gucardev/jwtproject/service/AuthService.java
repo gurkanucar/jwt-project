@@ -23,8 +23,8 @@ import java.util.Map;
 @Transactional
 public class AuthService {
 
-    @Value("${jwt-variables.EXPIRES_ACCESS_TOKEN}")
-    private String EXPIRES_REFRESH_TOKEN;
+    @Value("${jwt-variables.EXPIRES_REFRESH_TOKEN_MINUTE}")
+    private String EXPIRES_REFRESH_TOKEN_MINUTE;
 
     private final UserService userService;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -49,7 +49,7 @@ public class AuthService {
 
         refreshToken.setUser(user);
         refreshToken.setToken(token);
-        refreshToken.setExpiryDate(LocalDateTime.now().plusMinutes(Long.parseLong(EXPIRES_REFRESH_TOKEN)));
+        refreshToken.setExpiryDate(LocalDateTime.now().plusMinutes(Long.parseLong(EXPIRES_REFRESH_TOKEN_MINUTE)));
         refreshTokenRepository.save(refreshToken);
         return refreshToken;
     }
