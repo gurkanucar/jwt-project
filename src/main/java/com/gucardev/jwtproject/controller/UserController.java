@@ -29,7 +29,7 @@ public class UserController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN') || hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
         //convert to dto

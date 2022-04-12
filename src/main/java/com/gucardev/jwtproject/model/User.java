@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static javax.persistence.CascadeType.*;
 
@@ -57,7 +58,7 @@ public class User implements Serializable {
     private LocalDate createdDate;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = MERGE)
-    private Collection<Role> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 
 
 }

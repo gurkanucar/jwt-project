@@ -15,7 +15,7 @@ public class TestController {
         return ResponseEntity.ok("Hello!");
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN') || hasAnyAuthority('ADMIN')")
     @GetMapping("/admin")
     public ResponseEntity<?> admin() {
         return ResponseEntity.ok("Only admin can see this!");
