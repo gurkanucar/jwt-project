@@ -89,7 +89,9 @@ public class UserService implements UserDetailsService {
         existing.setPassword(user.getPassword());
         existing.setName(user.getName());
         existing.setSurname(user.getSurname());
-        existing.setRoles(user.getRoles());
+        if (doesIncludesRoles(List.of(ROLES.ADMIN, ROLES.SUPERADMIN), user.getRoles())) {
+            existing.setRoles(user.getRoles());
+        }
         userRepository.save(existing);
     }
 
