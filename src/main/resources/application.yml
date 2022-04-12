@@ -3,3 +3,13 @@ jwt-variables:
   ISSUER: 90000
   EXPIRES_ACCESS_TOKEN: 1
   EXPIRES_REFRESH_TOKEN: 150000
+
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:database
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+
