@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers(POST, "/auth/login", "/auth/register", "/auth/refresh").permitAll();
         http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
-        http.authorizeRequests().antMatchers("/role/**").hasAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ADMIN", "SUPERADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
         http.exceptionHandling().authenticationEntryPoint(authenticationExceptionHandler());
