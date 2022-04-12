@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,15 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       RoleService roleService) {
+                       RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class UserService implements UserDetailsService {
     public User saveUser(User user) {
         var userRole = roleService.getRoleByName("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(userRole);
+        user.setRoles(List.of(userRole));
         return userRepository.save(user);
     }
 
@@ -86,6 +88,14 @@ public class UserService implements UserDetailsService {
     protected User getUserByUsername(String username) {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
+    }
+
+    protected User checkLoginUser(String username, String password) {
+        var user = getUserByUsername(username);
+        if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("wrong password!");
+        }
+        return user;
     }
 
 

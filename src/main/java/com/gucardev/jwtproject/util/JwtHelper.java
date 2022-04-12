@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class JwtHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRES_ACCESS_TOKEN))
+                .withExpiresAt(convertToDateViaSqlDate(LocalDate.now().plusDays(Long.parseLong(EXPIRES_ACCESS_TOKEN))))
                 .withIssuer(ISSUER)
                 .withClaim("roles", roles)
                 .sign(algorithm);
@@ -67,6 +68,9 @@ public class JwtHelper {
                 .replace("-", "");
     }
 
+    public Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+        return java.sql.Date.valueOf(dateToConvert);
+    }
 
 
 }

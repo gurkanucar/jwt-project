@@ -31,14 +31,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        var userDto = mapper.map(authService.registerUser(createUserRequest), UserDto.class);
-        return ResponseEntity.ok().build();
+        //  var userDto = mapper.map(authService.registerUser(createUserRequest), UserDto.class);
+        return ResponseEntity.ok().body(authService.registerUser(createUserRequest));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        authService.login(loginRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(authService.login(loginRequest));
     }
 
     @PostMapping("/logout")

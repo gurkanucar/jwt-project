@@ -1,23 +1,20 @@
 package com.gucardev.jwtproject.service;
 
 
-import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.model.RefreshToken;
 import com.gucardev.jwtproject.model.User;
 import com.gucardev.jwtproject.repository.RefreshTokenRepository;
 import com.gucardev.jwtproject.request.CreateUserRequest;
 import com.gucardev.jwtproject.request.LoginRequest;
-import com.gucardev.jwtproject.request.RefreshTokenRequest;
 import com.gucardev.jwtproject.util.JwtHelper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -31,11 +28,16 @@ public class AuthService {
     private final UserService userService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtHelper jwtHelper;
+    private final ModelMapper mapper;
 
-    public AuthService(UserService userService, RefreshTokenRepository refreshTokenRepository, JwtHelper jwtHelper) {
+    public AuthService(UserService userService,
+                       RefreshTokenRepository refreshTokenRepository,
+                       JwtHelper jwtHelper,
+                       ModelMapper mapper) {
         this.userService = userService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.jwtHelper = jwtHelper;
+        this.mapper = mapper;
     }
 
     /*
@@ -84,12 +86,22 @@ public class AuthService {
     }
 
 
-    public User registerUser(CreateUserRequest createUserRequest) {
-        return null;
+    public Map<String, String> registerUser(CreateUserRequest createUserRequest) {
+
+        var user = User.builder()
+                .username(createUserRequest.getUsername())
+                .email(createUserRequest.getEmail())
+                .password(createUserRequest.getPassword())
+                .build();
+        userService.saveUser(user);
+        return createTokens(user);
+
     }
 
 
-    public void login(LoginRequest loginRequest) {
+    public Map<String, String> login(LoginRequest loginRequest) {
+        var user = userService.checkLoginUser(loginRequest.getUsername(), loginRequest.getPassword());
+        return createTokens(user);
     }
 
 
