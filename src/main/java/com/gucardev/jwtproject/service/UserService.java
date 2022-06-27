@@ -90,7 +90,9 @@ public class UserService implements UserDetailsService {
     public void updateUser(User user) {
         User existing = getUserByUsername(user.getUsername());
 
-        existing.setPassword(passwordEncoder.encode(user.getPassword()));
+        // DON'T UPDATE PASSWORD HERE!!
+        // TODO create update password method
+        //  existing.setPassword(passwordEncoder.encode(user.getPassword()));
         existing.setEmail(user.getEmail());
         existing.setName(user.getName());
         existing.setSurname(user.getSurname());
