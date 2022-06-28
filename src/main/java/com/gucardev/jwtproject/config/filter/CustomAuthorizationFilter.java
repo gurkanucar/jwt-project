@@ -35,27 +35,25 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 //            filterChain.doFilter(request, response);
 //
 //        else {
-            String authHeader = request.getHeader(AUTHORIZATION);
+        String authHeader = request.getHeader(AUTHORIZATION);
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
-                String token = authHeader.substring(7);
+            String token = authHeader.substring(7);
+
+            try {
                 UsernamePasswordAuthenticationToken authToken;
-                try {
-                    authToken = authService.getAuthToken(token);
-                } catch (Exception e) {
-                    throw new GeneralException("Try to login again!", HttpStatus.UNAUTHORIZED);
-                }
-
-
+                authToken = authService.getAuthToken(token);
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-
                 filterChain.doFilter(request, response);
-
-
-            } else {
-                filterChain.doFilter(request, response);
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid authentication.");
+                //throw new GeneralException("Try to login again!", HttpStatus.UNAUTHORIZED);
             }
+
+        } else {
+            filterChain.doFilter(request, response);
+        }
 
         //}
 
