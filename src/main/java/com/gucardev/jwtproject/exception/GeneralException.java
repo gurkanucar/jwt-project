@@ -19,5 +19,11 @@ public class GeneralException extends RuntimeException {
         this.time = LocalDate.now();
     }
 
+    public GeneralException(String message, int status) {
+        this.message = message;
+        this.status = HttpStatus.valueOf(status);
+        this.time = LocalDate.now();
+    }
+
 
 }
