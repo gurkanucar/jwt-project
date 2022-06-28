@@ -77,7 +77,7 @@ public class LoginRequestService {
                 room, loginQRCode.getRoom(), loginQRCode.getCode(),
                 loginQRCode.getType(), sessionID));
 
-        if (room.equals(loginQRCode.getRoom())) {
+        if (!room.equals(loginQRCode.getRoom())) {
             throw new GeneralException("Room Not Found", HttpStatus.NOT_FOUND);
         }
         addToUsers(loginQRCode, sessionID);
