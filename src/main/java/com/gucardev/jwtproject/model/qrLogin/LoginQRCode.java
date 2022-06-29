@@ -1,4 +1,4 @@
-package com.gucardev.jwtproject.model;
+package com.gucardev.jwtproject.model.qrLogin;
 
 
 import lombok.AllArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @Builder
@@ -22,16 +21,8 @@ public class LoginQRCode implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String room;
     private String code;
-
-    private List<String> connectedUsers;
-
-    @Transient
-    @Enumerated(EnumType.STRING)
-    private LoginQRCodeType type;
-
-    @Transient
-    private String message;
 
 }

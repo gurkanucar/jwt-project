@@ -1,6 +1,6 @@
 package com.gucardev.jwtproject.controller;
 
-import com.gucardev.jwtproject.model.LoginQRCode;
+import com.gucardev.jwtproject.model.qrLogin.LoginQRCode;
 import com.gucardev.jwtproject.service.LoginRequestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -29,7 +29,7 @@ public class LoginSocketController {
                                @Payload LoginQRCode loginQRCode,
                                @Header("simpSessionId") String sessionId) {
         service.processMessage(room, loginQRCode, sessionId);
-        log.error("Status for: " + room);
+       // log.error("Status for: " + room);
         //messagingTemplate.convertAndSend("/topic/fileStatus/" + id, msg);
 
     }

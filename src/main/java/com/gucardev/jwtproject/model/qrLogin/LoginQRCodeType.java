@@ -1,4 +1,4 @@
-package com.gucardev.jwtproject.model;
+package com.gucardev.jwtproject.model.qrLogin;
 
 public enum LoginQRCodeType {
     SERVER, CLIENT, MOBILE
