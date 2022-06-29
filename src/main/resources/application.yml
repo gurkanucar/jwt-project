@@ -17,3 +17,11 @@ spring:
     hibernate:
       ddl-auto: create
 
+  redis:
+    host: localhost
+    port: 6379
+
+#  redis:
+#    host: redis
+#    port: 6379
+
