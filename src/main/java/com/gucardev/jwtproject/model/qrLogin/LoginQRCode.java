@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
@@ -22,7 +24,19 @@ public class LoginQRCode implements Serializable {
     private Long id;
 
     @Column(unique = true)
+    @NotNull
+    @NotEmpty
     private String room;
+
+    @NotNull
+    @NotEmpty
     private String code;
+
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private LoginQRCodeType type;
+
+    @Transient
+    private String message;
 
 }
