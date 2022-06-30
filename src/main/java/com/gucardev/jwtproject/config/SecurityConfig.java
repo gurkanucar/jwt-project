@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    @Bean
+   /* @Bean
     CorsConfigurationSource corsConfigurationSource() {
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -106,7 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        source.registerCorsConfiguration("/auth/*", configuration);
 //        source.registerCorsConfiguration("/login", configuration);
         return source;
-    }
+    }*/
 
     @Bean
     @Override
