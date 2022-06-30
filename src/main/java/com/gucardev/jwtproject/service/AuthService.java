@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -66,9 +67,12 @@ public class AuthService {
         String access_token = jwtHelper.createJwtToken(user);
         RefreshToken refreshToken = createRefreshToken(user);
 
-        return Map.of("access_token", access_token,
-                "refresh_token", refreshToken.getToken());
-
+        Map<String, String> map = new HashMap();
+        map.put("access_token", access_token);
+        map.put("refresh_token", refreshToken.getToken());
+        map.put("username", user.getUsername());
+        map.put("id", user.getId().toString());
+        return map;
     }
 
 
