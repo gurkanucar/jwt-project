@@ -28,12 +28,11 @@ public class LoginSocketController {
     public void messageHandler(@DestinationVariable String room,
                                @Payload LoginQRCode loginQRCode,
                                @Header("simpSessionId") String sessionId) {
+        log.info(String.format("Room: %s, model: %s ", room, loginQRCode.toString()));
         service.processMessage(room, loginQRCode, sessionId);
-       // log.error("Status for: " + room);
         //messagingTemplate.convertAndSend("/topic/fileStatus/" + id, msg);
 
     }
-
 
 
 }
