@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public User getMyself() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return getUserByUsername(auth.getName());
+    }
 
     public User getUserByPermit(String username) {
         User user = getUserByUsername(username);

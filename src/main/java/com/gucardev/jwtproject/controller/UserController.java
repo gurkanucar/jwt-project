@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
 
 
@@ -40,6 +41,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
+    @GetMapping("/myself")
+    public ResponseEntity<?> getMyself() {
+        var dto = mapper.map(userService.getMyself(), UserDto.class);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable String username) {
