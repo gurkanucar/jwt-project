@@ -7,7 +7,6 @@ import com.gucardev.jwtproject.exception.CustomAuthenticationExceptionHandler;
 import com.gucardev.jwtproject.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,21 +15,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -65,21 +57,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new CustomAuthenticationFilter(authService);
         customAuthFilter.setAuthenticationManager(authenticationManagerBean());
 
-        /*
-        http.formLogin().disable();
-        http.cors();
-        http.csrf().ignoringAntMatchers("/loginListener", "/topic").disable();
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers(POST, "/auth/login", "/auth/register", "/auth/refresh").permitAll();
-        http.authorizeRequests().antMatchers("/h2-console/**", "/chat", "/loginListener", "/topic").permitAll();
-        http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ADMIN", "SUPERADMIN");
-        http.authorizeRequests().antMatchers("/loginListener/**");
-        http.authorizeRequests().anyRequest().authenticated();
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-        http.exceptionHandling().authenticationEntryPoint(authenticationExceptionHandler());
-        http.addFilterAt(customAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new CustomAuthorizationFilter(authService),
-                UsernamePasswordAuthenticationFilter.class);*/
+//        http.formLogin().disable();
+//        http.cors();
+//        http.csrf().ignoringAntMatchers("/loginListener", "/topic").disable();
+//        http.sessionManagement().sessionCreationPolicy(STATELESS);
+//        http.authorizeRequests().antMatchers(POST, "/auth/login", "/auth/register", "/auth/refresh").permitAll();
+//        http.authorizeRequests().antMatchers("/h2-console/**", "/chat", "/loginListener", "/topic").permitAll();
+//        http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ADMIN", "SUPERADMIN");
+//        http.authorizeRequests().antMatchers("/loginListener/**");
+//        http.authorizeRequests().anyRequest().authenticated();
+//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+//        http.exceptionHandling().authenticationEntryPoint(authenticationExceptionHandler());
+//        http.addFilterAt(customAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(new CustomAuthorizationFilter(authService),
+//                UsernamePasswordAuthenticationFilter.class);
 
         http.cors().and()
                 .authorizeRequests()
@@ -95,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(authenticationExceptionHandler())
                 .and()
                 .addFilterBefore(new CustomAuthorizationFilter(authService),
-                UsernamePasswordAuthenticationFilter.class)
+                        UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
 
@@ -110,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-       configuration.applyPermitDefaultValues();
+        configuration.applyPermitDefaultValues();
 //        source.registerCorsConfiguration("/api/**", configuration);
 //        source.registerCorsConfiguration("/auth/*", configuration);
 //        source.registerCorsConfiguration("/login", configuration);

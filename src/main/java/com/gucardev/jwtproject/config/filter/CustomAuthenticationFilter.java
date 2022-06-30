@@ -1,13 +1,14 @@
 package com.gucardev.jwtproject.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gucardev.jwtproject.exception.GeneralException;
 import com.gucardev.jwtproject.service.AuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,14 +19,16 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+@Slf4j
+public class CustomAuthenticationFilter  extends UsernamePasswordAuthenticationFilter {
+
 
     private final AuthService authService;
 
     public CustomAuthenticationFilter(AuthService authService) {
-        super(new AntPathRequestMatcher("/auth/login", "POST"));
         this.authService = authService;
     }
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -37,8 +40,6 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
             Map<String, String> requestMap = new ObjectMapper().readValue(request.getInputStream(), Map.class);
             username = requestMap.get("username");
             password = requestMap.get("password");
-
-
         } catch (IOException e) {
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
@@ -61,4 +62,5 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
     }
+
 }
