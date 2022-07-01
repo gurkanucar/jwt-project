@@ -18,10 +18,7 @@ spring:
       ddl-auto: create
 
   redis:
-    host: localhost
+    host: ${SPRING_REDIS_HOST}
     port: 6379
 
-#  redis:
-#    host: redis
-#    port: 6379
 

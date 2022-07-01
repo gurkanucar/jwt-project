@@ -1,17 +1,19 @@
 version: '3'
+
+
 services:
-  redis:
-    image: redis:latest
+  redisdb:
+    image: "redis"
     ports:
       - "6379:6379"
-  jwt-project:
-    image: jwt-project
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    links:
-      - redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  app:
+    build: .
     ports:
       - "8080:8080"
-
+    environment:
+      SPRING_REDIS_HOST: redisdb
+    depends_on:
+      - redisdb
 
