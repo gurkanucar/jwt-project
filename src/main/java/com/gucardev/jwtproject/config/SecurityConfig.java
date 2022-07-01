@@ -57,21 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new CustomAuthenticationFilter(authService);
         customAuthFilter.setAuthenticationManager(authenticationManagerBean());
 
-//        http.formLogin().disable();
-//        http.cors();
-//        http.csrf().ignoringAntMatchers("/loginListener", "/topic").disable();
-//        http.sessionManagement().sessionCreationPolicy(STATELESS);
-//        http.authorizeRequests().antMatchers(POST, "/auth/login", "/auth/register", "/auth/refresh").permitAll();
-//        http.authorizeRequests().antMatchers("/h2-console/**", "/chat", "/loginListener", "/topic").permitAll();
-//        http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ADMIN", "SUPERADMIN");
-//        http.authorizeRequests().antMatchers("/loginListener/**");
-//        http.authorizeRequests().anyRequest().authenticated();
-//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-//        http.exceptionHandling().authenticationEntryPoint(authenticationExceptionHandler());
-//        http.addFilterAt(customAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(new CustomAuthorizationFilter(authService),
-//                UsernamePasswordAuthenticationFilter.class);
-
         http.cors().and()
                 .authorizeRequests()
                 .antMatchers("/loginListener/**").permitAll()
@@ -91,22 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
 
     }
-
-   /* @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.applyPermitDefaultValues();
-//        source.registerCorsConfiguration("/api/**", configuration);
-//        source.registerCorsConfiguration("/auth/*", configuration);
-//        source.registerCorsConfiguration("/login", configuration);
-        return source;
-    }*/
 
     @Bean
     @Override
