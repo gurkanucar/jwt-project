@@ -18,11 +18,10 @@
 
 ### How to run
 
-#### clone the project: https://github.com/gurkanucar/qr-login-fe.git
+#### clone the project: https://github.com/gurkanucar/jwt-project
 
 ```bash
-  git clone https://github.com/gurkanucar/qr-login-fe.git
-  cd qr-login-fe
+  git clone https://github.com/gurkanucar/jwt-project
 ```
 
 #### create jar
